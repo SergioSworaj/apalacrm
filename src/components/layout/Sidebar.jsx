@@ -129,7 +129,7 @@ export const Sidebar = () => {
         ) : (
           <div style={{ display: 'flex', justifyContent: 'center' }}>
             <img 
-              src="/src/assets/apala-logo.png" 
+              src="https://apalajewels.com/static/img/logo/logo-transparent.png" 
               alt="Apala"
               style={{
                 height: 32,
