@@ -107,7 +107,7 @@ export const Sidebar = () => {
         {!sidebarCollapsed ? (
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
             <img 
-              src="/src/assets/apala-logo.png" 
+              src="https://apalajewels.com/static/img/logo/logo-transparent.png" 
               alt="Apala Jewels"
               style={{
                 height: 38,
