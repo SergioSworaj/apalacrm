@@ -19,12 +19,15 @@ import { AnalyticsView } from './views/AnalyticsView';
 import { BranchesView } from './views/BranchesView';
 import { TeamView } from './views/TeamView';
 import { SettingsView } from './views/SettingsView';
+import { AuditStorageView } from './views/AuditStorageView';
 
 // Modals
 import { AddClientModal } from './components/modals/AddClientModal';
 import { AddVisitModal } from './components/modals/AddVisitModal';
 import { AddCommunicationModal } from './components/modals/AddCommunicationModal';
 import { AddOpportunityModal } from './components/modals/AddOpportunityModal';
+import { AddCustomizationModal } from './components/modals/AddCustomizationModal';
+import { AddServiceCaseModal } from './components/modals/AddServiceCaseModal';
 import { TierPrivilegesDrawer } from './components/modals/TierPrivilegesDrawer';
 import { TransferOwnershipModal } from './components/modals/TransferOwnershipModal';
 import { DemoWalkthroughModal } from './components/demo/DemoWalkthroughModal';
@@ -53,7 +56,11 @@ const AppContent = () => {
       case 'appointments':
         return <AppointmentsView />;
       case 'communications':
-        return <CommunicationsView />;
+      case 'whatsapp':
+      case 'email':
+        return <CommunicationsView defaultTab={currentView === 'communications' ? 'logs' : currentView} />;
+      case 'audit-storage':
+        return <AuditStorageView />;
       case 'service-cases':
         return <ServiceCasesView />;
       case 'analytics':
@@ -88,6 +95,8 @@ const AppContent = () => {
       {activeModal === 'add-visit' && <AddVisitModal />}
       {activeModal === 'add-communication' && <AddCommunicationModal />}
       {activeModal === 'add-opportunity' && <AddOpportunityModal />}
+      {activeModal === 'add-customization' && <AddCustomizationModal />}
+      {activeModal === 'add-service-case' && <AddServiceCaseModal />}
       {activeModal === 'tier-privileges' && <TierPrivilegesDrawer />}
       {activeModal === 'transfer-owner' && <TransferOwnershipModal />}
       {activeModal === 'demo-tour' && <DemoWalkthroughModal />}

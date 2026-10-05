@@ -1142,6 +1142,16 @@ export const initialCustomizations = [
     clientBudget: 'NPR 500,000 max',
     startDate: '2026-09-02',
     expectedCompletion: '2026-10-17',
+    isOverdue: false,
+    daysPastDeadline: 0,
+    stageHistory: [
+      { id: 'sh-1', timestamp: '2026-09-02 10:00 AM', changedBy: 'Jharna Dahal', fromStage: null, fromStageIndex: null, toStage: 'Request', toStageIndex: 0, reason: 'Client initiated engagement ring customization', notes: 'Budget discussed: NPR 500k max', daysInStage: 1 },
+      { id: 'sh-2', timestamp: '2026-09-03 02:30 PM', changedBy: 'Jharna Dahal', fromStage: 'Request', fromStageIndex: 0, toStage: 'Product Type', toStageIndex: 1, reason: 'Product type confirmed', notes: 'Confirmed solitaire engagement ring design', daysInStage: 2 },
+      { id: 'sh-3', timestamp: '2026-09-05 11:00 AM', changedBy: 'Branch Manager', fromStage: 'Product Type', fromStageIndex: 1, toStage: 'Designer Assigned', toStageIndex: 2, reason: 'Designer assigned', notes: 'Assigned to Sonam Lama - CAD specialist', daysInStage: 3 },
+      { id: 'sh-4', timestamp: '2026-09-08 09:15 AM', changedBy: 'Sonam Lama', fromStage: 'Designer Assigned', fromStageIndex: 2, toStage: 'Design', toStageIndex: 3, reason: 'Initial design sketch complete', notes: 'Created initial concept with cathedral setting', daysInStage: 5 },
+      { id: 'sh-5', timestamp: '2026-09-13 03:45 PM', changedBy: 'Jharna Dahal', fromStage: 'Design', fromStageIndex: 3, toStage: 'Design Review', toStageIndex: 4, reason: 'Client reviewed initial design', notes: 'Client requested lower profile basket', daysInStage: 3 },
+      { id: 'sh-6', timestamp: '2026-09-16 10:30 AM', changedBy: 'Sonam Lama', fromStage: 'Design Review', fromStageIndex: 4, toStage: 'CAD', toStageIndex: 5, reason: 'Design approved, moving to 3D CAD', notes: 'Started 3D CAD modeling with adjustments', daysInStage: 2 }
+    ],
     designBrief: 'Bespoke 1.2ct certified oval solitaire mounted on 18K white gold cathedral band. Four micro-claw prongs with secret diamond halo underneath the center basket. Delicate pavé diamonds lining the shank half-way.',
     status: 'In Progress - On Schedule',
     costingBreakdown: {
@@ -1187,6 +1197,19 @@ export const initialCustomizations = [
     clientBudget: 'NPR 1,500,000',
     startDate: '2026-08-19',
     expectedCompletion: '2026-10-08',
+    isOverdue: true,
+    daysPastDeadline: 3,
+    stageHistory: [
+      { id: 'sh-7', timestamp: '2026-08-19 11:30 AM', changedBy: 'Aditya Limbu', fromStage: null, fromStageIndex: null, toStage: 'Request', toStageIndex: 0, reason: 'VIP client custom choker request', notes: 'High-value client, priority handling', daysInStage: 1 },
+      { id: 'sh-8', timestamp: '2026-08-20 10:00 AM', changedBy: 'Aditya Limbu', fromStage: 'Request', fromStageIndex: 0, toStage: 'Product Type', toStageIndex: 1, reason: 'Confirmed choker design', notes: 'Emerald centerpiece discussed', daysInStage: 2 },
+      { id: 'sh-9', timestamp: '2026-08-22 02:00 PM', changedBy: 'Branch Manager', fromStage: 'Product Type', fromStageIndex: 1, toStage: 'Designer Assigned', toStageIndex: 2, reason: 'Master jeweller assigned', notes: 'Assigned to Arun - heritage specialist', daysInStage: 4 },
+      { id: 'sh-10', timestamp: '2026-08-26 09:00 AM', changedBy: 'Arun Bajracharya', fromStage: 'Designer Assigned', fromStageIndex: 2, toStage: 'Design', toStageIndex: 3, reason: 'Hand-drawn heritage sketch', notes: 'Traditional Newari choker pattern', daysInStage: 6 },
+      { id: 'sh-11', timestamp: '2026-09-01 04:00 PM', changedBy: 'Aditya Limbu', fromStage: 'Design', fromStageIndex: 3, toStage: 'Design Review', toStageIndex: 4, reason: 'Client approved at boutique', notes: 'Signed off personally, no changes', daysInStage: 3 },
+      { id: 'sh-12', timestamp: '2026-09-04 11:00 AM', changedBy: 'Arun Bajracharya', fromStage: 'Design Review', fromStageIndex: 4, toStage: 'CAD', toStageIndex: 5, reason: 'Master wax model created', notes: 'Traditional wax carving method', daysInStage: 4 },
+      { id: 'sh-13', timestamp: '2026-09-08 10:00 AM', changedBy: 'Production Team', fromStage: 'CAD', fromStageIndex: 5, toStage: 'Costing', toStageIndex: 6, reason: 'Wax approved, costing finalized', notes: 'Final cost: NPR 1.2M', daysInStage: 3 },
+      { id: 'sh-14', timestamp: '2026-09-11 03:30 PM', changedBy: 'Aditya Limbu', fromStage: 'Costing', fromStageIndex: 6, toStage: 'Client Approval', toStageIndex: 7, reason: 'Quote accepted, advance paid', notes: 'NPR 500k advance received', daysInStage: 5 },
+      { id: 'sh-15', timestamp: '2026-09-16 09:00 AM', changedBy: 'Production Team', fromStage: 'Client Approval', fromStageIndex: 7, toStage: 'Production', toStageIndex: 8, reason: 'Started stone setting', notes: 'Currently setting emerald', daysInStage: 16 }
+    ],
     designBrief: 'Heritage 18K antique gold choker studded with 14.2ct central Zambian emerald cabochon and syndicate rose-cut diamonds.',
     status: 'In Production - Stone Setting',
     costingBreakdown: {

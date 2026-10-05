@@ -18,7 +18,10 @@ import {
   Users2,
   Settings,
   PlayCircle,
-  ChevronRight
+  ChevronRight,
+  Smartphone,
+  Mail,
+  HardDrive
 } from 'lucide-react';
 
 const NAV_SECTIONS = [
@@ -38,7 +41,26 @@ const NAV_SECTIONS = [
       { id: 'opportunities', label: 'Opportunities', icon: TrendingUp, badgeKey: 'opps' },
       { id: 'customizations', label: 'Customizations', icon: Layers, badgeKey: 'custs' },
       { id: 'follow-ups', label: 'Follow-ups', icon: Clock, badgeKey: 'followups', badgeAlert: true },
-      { id: 'communications', label: 'Communications', icon: MessageSquare },
+    ]
+  },
+  {
+    label: 'Service',
+    items: [
+      { id: 'service-cases', label: 'Service Tickets', icon: Wrench, badgeKey: 'openCases', badgeAlert: true },
+    ]
+  },
+  {
+    label: 'Communications',
+    items: [
+      { id: 'communications', label: 'Communication Logs', icon: MessageSquare },
+      { id: 'whatsapp', label: 'WhatsApp Business', icon: Smartphone, badgeKey: 'whatsappUnread' },
+      { id: 'email', label: 'Email Inbox', icon: Mail, badgeKey: 'emailUnread' },
+    ]
+  },
+  {
+    label: 'Quality & Storage',
+    items: [
+      { id: 'audit-storage', label: 'Audit Storage', icon: HardDrive },
     ]
   },
   {
@@ -72,8 +94,10 @@ export const Sidebar = () => {
     clients:   clients.length,
     opps:      opportunities.filter(o => o.stage !== 'Closed Successfully' && o.stage !== 'Closed Without Sale').length,
     custs:     customizations.length,
-    service:   serviceCases.filter(s => s.status !== 'Resolved').length,
+    openCases: serviceCases.filter(s => s.status !== 'Resolved').length,
     followups: followUps.filter(f => f.status === 'Today' || f.status === 'Overdue').length,
+    whatsappUnread: 3, // This will be dynamic from WhatsApp API
+    emailUnread: 1, // This will be dynamic from Gmail API
   };
 
   const userProfile = {

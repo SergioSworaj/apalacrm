@@ -10,7 +10,8 @@ import {
   FileText,
   ChevronRight,
   ArrowRight,
-  AlertCircle
+  AlertCircle,
+  Plus
 } from 'lucide-react';
 
 export const ServiceCasesView = () => {

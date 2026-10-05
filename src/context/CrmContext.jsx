@@ -329,6 +329,51 @@ export const CrmProvider = ({ children }) => {
     showToast(`Communication logged for ${commData.clientName}`);
   };
 
+  // Add Service Case
+  const addServiceCase = (caseData) => {
+    const newCase = {
+      id: `SC-${Date.now()}`,
+      clientId: caseData.clientId,
+      clientName: caseData.clientName,
+      product: caseData.product,
+      type: caseData.type,
+      severity: caseData.severity,
+      problemDescription: caseData.problemDescription,
+      promisedResolutionDate: caseData.promisedResolutionDate,
+      accountablePerson: caseData.accountablePerson,
+      status: caseData.status || 'Open',
+      branch: caseData.branch || selectedBranch,
+      timeline: [
+        {
+          date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+          action: `Case opened: ${caseData.problemDescription.substring(0, 80)}...`,
+          author: caseData.accountablePerson
+        }
+      ],
+      resolutionAction: '',
+      clientSatisfaction: 'Pending Resolution'
+    };
+
+    setServiceCases(prev => [newCase, ...prev]);
+
+    // Update client audit history
+    setClients(prev => prev.map(c => {
+      if (c.id !== caseData.clientId) return c;
+      const audit = {
+        id: `aud-${Date.now()}`,
+        date: new Date().toLocaleString(),
+        author: caseData.accountablePerson,
+        action: `Service Case Created: ${caseData.type} - ${caseData.product}`
+      };
+      return {
+        ...c,
+        auditHistory: [audit, ...c.auditHistory]
+      };
+    }));
+
+    showToast(`Service case created for ${caseData.clientName}`);
+  };
+
   // Update Opportunity Stage (Kanban Move)
   const updateOpportunityStage = (oppId, newStage, lostData = null) => {
     setOpportunities(prev => prev.map(opp => {
@@ -382,13 +427,76 @@ export const CrmProvider = ({ children }) => {
         'Production', 'Quality Check', 'Ready', 'Delivered'
       ][nextStageIndex] || cust.currentStage;
 
+      // Create stage history entry
+      const historyEntry = {
+        id: `sh-${Date.now()}`,
+        timestamp: new Date().toLocaleString('en-US', { 
+          year: 'numeric', 
+          month: '2-digit', 
+          day: '2-digit', 
+          hour: '2-digit', 
+          minute: '2-digit',
+          hour12: true 
+        }),
+        changedBy: currentRole === ROLES.EXECUTIVE ? 'Current User' : currentRole,
+        fromStage: cust.currentStage,
+        fromStageIndex: cust.currentStageIndex,
+        toStage: stageName,
+        toStageIndex: nextStageIndex,
+        reason: nextStageIndex > cust.currentStageIndex ? 'Stage advanced' : 'Stage reverted',
+        notes: nextStageIndex > cust.currentStageIndex ? `Advanced from ${cust.currentStage} to ${stageName}` : `Reverted from ${cust.currentStage} back to ${stageName}`,
+        daysInStage: 0
+      };
+
       return {
         ...cust,
         currentStageIndex: nextStageIndex,
-        currentStage: stageName
+        currentStage: stageName,
+        stageHistory: [historyEntry, ...(cust.stageHistory || [])]
       };
     }));
-    showToast(`Customization advanced to stage: ${nextStageIndex}`);
+    showToast(`Customization stage updated`);
+  };
+
+  // Revert Customization to Previous Stage
+  const revertCustomizationStage = (custId, targetStageIndex, reason = '') => {
+    setCustomizations(prev => prev.map(cust => {
+      if (cust.id !== custId) return cust;
+      
+      const stageName = [
+        'Request', 'Product Type', 'Designer Assigned', 'Design',
+        'Design Review', 'CAD', 'Costing', 'Client Approval',
+        'Production', 'Quality Check', 'Ready', 'Delivered'
+      ][targetStageIndex] || cust.currentStage;
+
+      const historyEntry = {
+        id: `sh-${Date.now()}`,
+        timestamp: new Date().toLocaleString('en-US', { 
+          year: 'numeric', 
+          month: '2-digit', 
+          day: '2-digit', 
+          hour: '2-digit', 
+          minute: '2-digit',
+          hour12: true 
+        }),
+        changedBy: currentRole === ROLES.EXECUTIVE ? 'Current User' : currentRole,
+        fromStage: cust.currentStage,
+        fromStageIndex: cust.currentStageIndex,
+        toStage: stageName,
+        toStageIndex: targetStageIndex,
+        reason: reason || 'Stage reverted by user',
+        notes: `REVERTED from ${cust.currentStage} back to ${stageName}`,
+        daysInStage: 0
+      };
+
+      return {
+        ...cust,
+        currentStageIndex: targetStageIndex,
+        currentStage: stageName,
+        stageHistory: [historyEntry, ...(cust.stageHistory || [])]
+      };
+    }));
+    showToast(`Customization reverted to: ${stageName}`);
   };
 
   // Resolve Service Case
@@ -502,10 +610,12 @@ export const CrmProvider = ({ children }) => {
         addClientNote,
         addVisit,
         addCommunication,
+        addServiceCase,
         updateOpportunityStage,
         completeFollowUp,
         rescheduleFollowUp,
         advanceCustomizationStage,
+        revertCustomizationStage,
         resolveServiceCase,
         archiveRecord,
         restoreRecord,

@@ -93,9 +93,6 @@ export const AddCommunicationModal = () => {
                 <option value="WhatsApp">WhatsApp Message / Video</option>
                 <option value="Phone">Direct Phone Call</option>
                 <option value="Email">Email</option>
-                <option value="In-person">In-person store</option>
-                <option value="Video Call">Virtual store Video Call</option>
-                <option value="SMS">SMS Notification</option>
               </select>
             </div>
 
