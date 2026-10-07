@@ -69,63 +69,135 @@ export const CommunicationsView = ({ defaultTab = 'logs' }) => {
 
   const channels = ['All', 'WhatsApp', 'Phone', 'Email'];
 
-  // Mock WhatsApp raw chats
+  // WhatsApp Business Numbers (4 executives)
+  const [waBusinessNumbers] = useState([
+    { id: 'wa-num-1', phoneNumber: '+977-9841001001', executiveName: 'Anisha Rai', branch: 'Baluwatar', status: 'active' },
+    { id: 'wa-num-2', phoneNumber: '+977-9841001002', executiveName: 'Rohan Shrestha', branch: 'Baluwatar', status: 'active' },
+    { id: 'wa-num-3', phoneNumber: '+977-9841001003', executiveName: 'Priya Gurung', branch: 'Lazimpat', status: 'active' },
+    { id: 'wa-num-4', phoneNumber: '+977-9841001004', executiveName: 'Suman Tamang', branch: 'Lazimpat', status: 'active' }
+  ]);
+
+  const [selectedWaNumber, setSelectedWaNumber] = useState(null);
+  const [chatLabels, setChatLabels] = useState({});
+  const [showLinkClientModal, setShowLinkClientModal] = useState(false);
+  const [chatToLink, setChatToLink] = useState(null);
+
+  // Mock WhatsApp chats from Coexistence API (Read-Only from 4 WA Business numbers)
   const [whatsappRawChats] = useState([
     {
       id: 'wa-001',
-      phoneNumber: '+977-9841234567',
+      waBusinessNumber: '+977-9841001001', // Anisha Rai's number
+      executiveName: 'Anisha Rai',
+      customerNumber: '+977-9841234567',
       contactName: 'Maya Sharma',
       linkedClientId: '26-BLW-001-NS',
       isLinked: true,
       lastMessage: 'Thank you for showing me the diamond rings today!',
       lastMessageTime: '2026-10-05 11:30 AM',
-      unreadCount: 0,
+      lastMessageDate: '2026-10-05',
+      chatStatus: 'active',
+      labels: ['Hot Lead', 'Engagement Ring'],
       messages: [
-        { id: 'm1', sender: 'client', text: 'Hello, I am interested in engagement rings', time: '10:15 AM', status: 'read' },
-        { id: 'm2', sender: 'us', text: 'Hello Maya! We have beautiful solitaire diamond rings. Would you like to visit our showroom?', time: '10:18 AM', status: 'delivered' },
-        { id: 'm3', sender: 'client', text: 'Yes, I can come today at 11 AM', time: '10:20 AM', status: 'read' },
-        { id: 'm4', sender: 'us', text: 'Perfect! We will be waiting for you at our Baluwatar boutique', time: '10:22 AM', status: 'read' },
-        { id: 'm5', sender: 'client', text: 'Thank you for showing me the diamond rings today!', time: '11:30 AM', status: 'read' }
+        { id: 'm1', sender: 'customer', text: 'Hello, I am interested in engagement rings', time: '10:15 AM', date: '2026-10-05' },
+        { id: 'm2', sender: 'executive', text: 'Hello Maya! We have beautiful solitaire diamond rings. Would you like to visit our showroom?', time: '10:18 AM', date: '2026-10-05' },
+        { id: 'm3', sender: 'customer', text: 'Yes, I can come today at 11 AM', time: '10:20 AM', date: '2026-10-05' },
+        { id: 'm4', sender: 'executive', text: 'Perfect! We will be waiting for you at our Baluwatar boutique', time: '10:22 AM', date: '2026-10-05' },
+        { id: 'm5', sender: 'customer', text: 'Thank you for showing me the diamond rings today!', time: '11:30 AM', date: '2026-10-05' }
       ],
       isLoggedToCRM: false,
       messageCount: 5,
       firstMessageDate: '2026-10-05',
-      tags: ['Hot Lead', 'Engagement Ring']
+      lastSyncedAt: '2026-10-05 11:35 AM'
     },
     {
       id: 'wa-002',
-      phoneNumber: '+977-9851234888',
+      waBusinessNumber: '+977-9841001001', // Anisha Rai's number
+      executiveName: 'Anisha Rai',
+      customerNumber: '+977-9851234888',
       contactName: 'Unknown Contact',
       linkedClientId: null,
       isLinked: false,
       lastMessage: 'Do you have gold necklace sets?',
       lastMessageTime: '2026-10-05 03:45 PM',
-      unreadCount: 2,
+      lastMessageDate: '2026-10-05',
+      chatStatus: 'new',
+      labels: ['New Inquiry'],
       messages: [
-        { id: 'm1', sender: 'client', text: 'Do you have gold necklace sets?', time: '03:45 PM', status: 'delivered' },
-        { id: 'm2', sender: 'client', text: 'What is the price range?', time: '03:46 PM', status: 'delivered' }
+        { id: 'm1', sender: 'customer', text: 'Do you have gold necklace sets?', time: '03:45 PM', date: '2026-10-05' },
+        { id: 'm2', sender: 'customer', text: 'What is the price range?', time: '03:46 PM', date: '2026-10-05' }
       ],
       isLoggedToCRM: false,
       messageCount: 2,
       firstMessageDate: '2026-10-05',
-      tags: ['New Lead']
+      lastSyncedAt: '2026-10-05 03:50 PM'
     },
     {
       id: 'wa-003',
-      phoneNumber: '+977-9801334455',
+      waBusinessNumber: '+977-9841001002', // Rohan Shrestha's number
+      executiveName: 'Rohan Shrestha',
+      customerNumber: '+977-9801334455',
       contactName: 'Rajesh Kumar',
       linkedClientId: '26-BLW-003-NS',
       isLinked: true,
       lastMessage: 'Can I reschedule my appointment to next week?',
       lastMessageTime: '2026-10-04 02:20 PM',
-      unreadCount: 1,
+      lastMessageDate: '2026-10-04',
+      chatStatus: 'active',
+      labels: ['Existing Client', 'Wedding Bands'],
       messages: [
-        { id: 'm1', sender: 'client', text: 'Can I reschedule my appointment to next week?', time: '02:20 PM', status: 'delivered' }
+        { id: 'm1', sender: 'customer', text: 'Hi, I need to discuss the wedding band designs', time: '01:15 PM', date: '2026-10-04' },
+        { id: 'm2', sender: 'executive', text: 'Sure! I have some new designs to show you', time: '01:20 PM', date: '2026-10-04' },
+        { id: 'm3', sender: 'customer', text: 'Can I reschedule my appointment to next week?', time: '02:20 PM', date: '2026-10-04' }
       ],
       isLoggedToCRM: true,
-      messageCount: 8,
+      messageCount: 3,
       firstMessageDate: '2026-09-15',
-      tags: ['Existing Client', 'Wedding Bands']
+      lastSyncedAt: '2026-10-04 02:25 PM'
+    },
+    {
+      id: 'wa-004',
+      waBusinessNumber: '+977-9841001003', // Priya Gurung's number
+      executiveName: 'Priya Gurung',
+      customerNumber: '+977-9801445566',
+      contactName: 'Kritika Singh',
+      linkedClientId: '26-LBM-005-KS',
+      isLinked: true,
+      lastMessage: 'When will my custom necklace be ready?',
+      lastMessageTime: '2026-10-05 10:15 AM',
+      lastMessageDate: '2026-10-05',
+      chatStatus: 'active',
+      labels: ['VIP', 'Customization Follow-up'],
+      messages: [
+        { id: 'm1', sender: 'customer', text: 'Hi Priya, checking on my custom necklace order', time: '10:10 AM', date: '2026-10-05' },
+        { id: 'm2', sender: 'executive', text: 'Hello Kritika! Let me check the status for you', time: '10:12 AM', date: '2026-10-05' },
+        { id: 'm3', sender: 'customer', text: 'When will my custom necklace be ready?', time: '10:15 AM', date: '2026-10-05' }
+      ],
+      isLoggedToCRM: false,
+      messageCount: 3,
+      firstMessageDate: '2026-09-20',
+      lastSyncedAt: '2026-10-05 10:20 AM'
+    },
+    {
+      id: 'wa-005',
+      waBusinessNumber: '+977-9841001004', // Suman Tamang's number
+      executiveName: 'Suman Tamang',
+      customerNumber: '+977-9801556677',
+      contactName: 'Bikash Thapa',
+      linkedClientId: null,
+      isLinked: false,
+      lastMessage: 'Do you do ring resizing?',
+      lastMessageTime: '2026-10-05 12:30 PM',
+      lastMessageDate: '2026-10-05',
+      chatStatus: 'new',
+      labels: ['Service Inquiry'],
+      messages: [
+        { id: 'm1', sender: 'customer', text: 'Hello, do you do ring resizing?', time: '12:28 PM', date: '2026-10-05' },
+        { id: 'm2', sender: 'customer', text: 'Do you do ring resizing?', time: '12:30 PM', date: '2026-10-05' }
+      ],
+      isLoggedToCRM: false,
+      messageCount: 2,
+      firstMessageDate: '2026-10-05',
+      lastSyncedAt: '2026-10-05 12:35 PM'
     }
   ]);
 
@@ -224,14 +296,27 @@ Kritika`,
   }, [communications, selectedBranch, selectedChannel, searchTerm]);
 
   const filteredWhatsAppChats = useMemo(() => {
-    if (!whatsappSearchTerm.trim()) return whatsappRawChats;
-    const q = whatsappSearchTerm.toLowerCase();
-    return whatsappRawChats.filter(chat => 
-      chat.contactName.toLowerCase().includes(q) ||
-      chat.phoneNumber.includes(q) ||
-      chat.lastMessage.toLowerCase().includes(q)
-    );
-  }, [whatsappRawChats, whatsappSearchTerm]);
+    let chats = whatsappRawChats;
+    
+    // Filter by selected WA Business number
+    if (selectedWaNumber) {
+      chats = chats.filter(c => c.waBusinessNumber === selectedWaNumber);
+    }
+    
+    // Search filter
+    if (whatsappSearchTerm.trim()) {
+      const q = whatsappSearchTerm.toLowerCase();
+      chats = chats.filter(chat => 
+        chat.contactName.toLowerCase().includes(q) ||
+        chat.customerNumber.includes(q) ||
+        chat.lastMessage.toLowerCase().includes(q) ||
+        chat.executiveName.toLowerCase().includes(q) ||
+        chat.labels.some(label => label.toLowerCase().includes(q))
+      );
+    }
+    
+    return chats;
+  }, [whatsappRawChats, whatsappSearchTerm, selectedWaNumber]);
 
   const filteredEmails = useMemo(() => {
     let filtered = emails.filter(e => e.folder === emailFilter);
@@ -361,6 +446,35 @@ Kritika`,
     showToast(`Email logged to ${targetType === 'client' ? 'client CRM' : 'lead'} successfully`);
     setShowEmailLogModal(false);
     setSelectedEmailToLog(null);
+  };
+
+  const handleLinkToClient = (chat) => {
+    setChatToLink(chat);
+    setShowLinkClientModal(true);
+  };
+
+  const confirmLinkToClient = (clientId) => {
+    // In production, this would update via WhatsApp Coexistence API
+    showToast(`Chat linked to client ${clients.find(c => c.id === clientId)?.name}`);
+    setShowLinkClientModal(false);
+    setChatToLink(null);
+  };
+
+  const handleAddLabel = (chatId, newLabel) => {
+    // In production, update via API
+    setChatLabels(prev => ({
+      ...prev,
+      [chatId]: [...(prev[chatId] || []), newLabel]
+    }));
+    showToast(`Label "${newLabel}" added to chat`);
+  };
+
+  const handleRemoveLabel = (chatId, labelToRemove) => {
+    setChatLabels(prev => ({
+      ...prev,
+      [chatId]: (prev[chatId] || []).filter(l => l !== labelToRemove)
+    }));
+    showToast(`Label "${labelToRemove}" removed`);
   };
 
   return (
